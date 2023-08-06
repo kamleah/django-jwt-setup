@@ -8,12 +8,16 @@ from rest_framework.views import APIView
 from .serializers import SignUpSerializer
 from .tokens import create_jwt_pair_for_user
 
-# Create your views here.
+from drf_yasg.utils import swagger_auto_schema
 
+from .schema import LoginSchema
+
+# Create your views here.
 
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = []
+    @swagger_auto_schema(tags=['Auth'], request_body=serializer_class())
 
     def post(self, request: Request):
         data = request.data
@@ -32,7 +36,7 @@ class SignUpView(generics.GenericAPIView):
 
 class LoginView(APIView):
     permission_classes = []
-
+    @swagger_auto_schema(tags=['Auth'], request_body=LoginSchema,)
     def post(self, request: Request):
         email = request.data.get("email")
         password = request.data.get("password")
